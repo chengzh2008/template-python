@@ -9,11 +9,11 @@
       pkgs = import inputs.nixpkgs { inherit system; };
     in
     {
-      devShells.x86_64-darwin.python311 = pkgs.mkShell {
+      devShells.${system}.default = pkgs.mkShell {
         nativeBuildInputs = with pkgs;
           let
             devpython = pkgs.python311.withPackages
-              (packages: with packages; [ virtualenv pip setuptools wheel ]);
+              (packages: with packages; [ virtualenv pip setuptools wheel build pytest ]);
           in
           [ devpython ];
         # somehow it only works with bash
@@ -25,6 +25,7 @@
         '';
         C_INCLUDE_PATH = "${pkgs.rdkafka}/include/";
         LIBRARY_PATH = "${pkgs.rdkafka}/lib/";
+        PYTHONDONTWRITEBYTECODE = 1;
       };
     };
 }
